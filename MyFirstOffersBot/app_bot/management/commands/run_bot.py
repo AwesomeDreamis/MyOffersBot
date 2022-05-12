@@ -1,3 +1,4 @@
+import json
 import logging
 from django.core.management.base import BaseCommand
 from aiogram import Bot, Dispatcher, executor, types
@@ -5,7 +6,11 @@ from app_bot.models import Employer
 from asgiref.sync import sync_to_async
 
 
-API_TOKEN = '5354949675:AAF-tlHaCp4TS5OA0CvprizvHaINnMASZN0'
+path = 'C:/Users/alexm/Desktop/django_secrets/'
+with open(f'{path}telegramAPI.json', encoding="utf-8") as file:
+    keys = json.loads(file.read())
+
+API_TOKEN = keys['API_TOKEN']
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +26,7 @@ command = ''
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
     text = 'Привет, меня зовут Александр\n' \
-           'Это бот для пассивного поиска работы' \
+           'Это бот для пассивного поиска работы\n' \
            'Информация обо мне /info\n' \
            'Прислать мне вакансию /vacancy'
     await message.answer(text)
@@ -113,7 +118,7 @@ async def send(message: types.Message):
         await message.answer(failed_text)
     else:
         await message.answer(success_text)
-        await bot.send_message(chat_id='238897024', text=f'Компания {emp.name} хочет с вами связаться')
+        await bot.send_message(chat_id='238897024', text=f'Компания "{emp.name}" хочет с вами связаться')
 
 
 @sync_to_async
